@@ -1,0 +1,7 @@
+
+if __name__=="__main__":
+	a=2
+	b=3
+	c=a+b
+	print("%d" %c)
+	print("%d-%d" %(b,a))

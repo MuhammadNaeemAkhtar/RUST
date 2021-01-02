@@ -1,0 +1,494 @@
+class Calculator(object):
+	def __init__ (self,brand):
+		self.brand=brand
+	def add(self,a,b):
+		print(f"{a} + {b} = {a+b}")
+	def sub(self,a,b):
+		print(f"{a} - {b} = {a-b}")
+	def mul(self,a,b):
+		print(f"{a} * {b} = {a*b}")
+	def div(self,a,b):
+		print(f"{a} / {b} = {a/b:.3}")
+
+
+import math
+class Point(object):
+	"""Class for a Point object: the available methods are move(x,y) and distance(another_point)"""
+	def __init__(self, x,y,):
+		super(Point, self).__init__()
+		self.x = x
+		self.y = y
+	def __repr__(self):
+		return "{},{}".format(self.x,self.y)
+	def move(self,vectorX=0,vectorY=0):
+		"""
+		Insert the x and the y component of the vector you want to apply to the point
+		"""
+		self.x+=vectorX
+		self.y+=vectorY
+	def distance(self,other):
+		return math.sqrt((self.x-other.x)**2+(self.y-other.y)**2)
+		
+
+import math
+class Point(object):
+	"""Class for a Point object: the available methods are move(x,y) and distance(another_point)"""
+	def __init__(self, x,y,):
+		super(Point, self).__init__()
+		self.x = x
+		self.y = y
+	def __repr__(self):
+		return "{},{}".format(self.x,self.y)
+	def move(self,vectorX=0,vectorY=0):
+		"""
+		Insert the x and the y component of the vector you want to apply to the point
+		"""
+		self.x+=vectorX
+		self.y+=vectorY
+	def distance(self,other):
+		return math.sqrt((self.x-other.x)**2+(self.y-other.y)**2)
+		
+
+
+from Exercise_1 import *
+import math
+class Line(object):
+	def __init__(self,m=0,q=0):
+		"""Line stored as y=mx+q"""
+		super(Line,self).__init__()
+		self.m=m
+		self.q=q
+		
+	def __repr__(self):
+		
+		return "Line: y={self.m}x+{self.q}"
+	
+	def line_from_points(self,pointA,pointB):
+		""" line_from_points(A,B)
+		Calculate the equation of the line y=mx+q crossing two points A and B"""
+		m=(pointB.y-pointA.y)/(pointB.x-pointA.x)
+		q=-((pointB.y-pointA.y)/(pointB.x-pointA.x))*pointA.x+pointA.y
+		return Line(m,q)
+		
+		
+	def distance(self,point):
+		"""distance(point)
+		Calculates the distance between the line and the given point"""
+		return (abs(point.y-(self.m*point.x+self.q))/math.sqrt(1+self.m**2))
+	
+	def intersection(self,other):
+		"""intersection(otherLine)
+		Calculates the point of intersection between the two lines"""
+		if self.m==other.m:
+			print('The lines are parallel')
+			return None
+		else:
+			x=(other.q-self.q)/(self.m-other.m)
+			y=self.m*((other.q-self.q)/(self.m-other.m))+self.q
+			return Point(x,y)
+
+
+
+import random
+
+class Card(object):
+	"""Each a card has a suit and a value defined when it's created"""
+	
+	def __init__(self, suit, value):
+		self.suit = suit
+		self.value= value
+	
+	def __repr__(self):
+		return f"{self.value} of {self.suit}"
+
+class Deck(object):
+	"""The deck is composed by 13 cards for each of the 4 suits. 
+	It also has:
+		a shuffle() method that returns the shffled deck
+		a draw(n) method that returns a list of n cards """
+
+	suits=['Hearts','Diamonds','Clubs','Spades']	
+	values=['A','2','3','4','5','6','7','8','9','10','J','Q','K']
+	
+	
+	def __init__(self ):
+		self.cards=[ Card(s,v) for s in Deck.suits for v in Deck.values]
+	
+	def shuffle(self):
+		"""Shuffles the deck"""
+		random.shuffle(self.cards)
+	
+	def draw(self,n=1):
+		"""Returns n cards, 1 if n is not specified"""
+		if n<=len(self.cards):
+			drawn=[]
+			for i in range(n):
+				drawn.append(self.cards.pop())
+			return drawn
+		elif n>len(self.cards) and len(self.cards)!=0:
+			return self.draw(len(self.cards))
+		else:
+			return None
+		
+
+class Contact():
+	"""Contact defined by his name surname and emal"""
+	def __init__(self,name,surname,mail):
+		self.name=name
+		self.surname=surname
+		self.mail=mail
+	def __repr__(self):
+		return "{},{},{}".format(self.name,self.surname,self.mail)
+
+class AddressBook():
+	"""Collection of object of the class Contact
+	The available methods are:
+	show():shows the list of contacts
+	find_by_name():returns all the contact with that name
+	find_by_surname():returns all the contact with that surname
+	add_contact(name,surname,email):adds the contact to the book
+	remove_contact(name): remove all the contacts with the given name
+	save():saves the book"""
+	def __init__(self):
+		fileContent=open('contacts.txt').read()
+		self.contacts=[]
+		lines=fileContent.splitlines()
+		for line in lines:
+			contact_raw=line.split(',')
+			self.add_contact(contact_raw[0],contact_raw[1],contact_raw[2])
+	def show(self):
+		"""shows the list of contacts"""
+		for contact in self.contacts:
+			print(contact)
+	
+	def find(self,surname):
+		"""find(surname):returns all the contact with that surname"""
+		results=[contact for contact in self.contacts if contact.surname==surname]
+		print("I found the following results:\n")
+		for x in results:
+			print(x)
+	def add_contact(self,name,surname,mail):
+		"""
+		add_contact(name,surname,email): adds the contact to the book
+		"""
+		self.contacts.append(Contact(name,surname,mail))
+	def update_contact(self,name,surname):
+		"""update_contact(name,surname): find the contact with given name and surname and allows edit of the email"""
+		updated=False
+		i=0
+		while not updated:
+			if self.contacts[i].name==name and self.contacts[i].surname==surname:
+				self.contacts[i].mail=input(f"Insert the new mail of {name} {surname}: ")
+				updated=True
+			i+=1
+
+	def remove_contact(self,name):
+		"""remove_contact(name): remove all the contacts with the given name"""
+		for i in range(len(self.contacts)):
+			if self.contacts[i].name==name:
+				self.contacts.pop(i)
+	def save(self):
+		"""save():saves the book"""
+		fp=open('contacts.txt','w')
+		for c in self.contacts:
+			s=c.name+','+c.surname+','+c.mail+'\n'
+			fp.write(s)
+			
+if __name__=="__main__":
+	book=AddressBook()
+	print('Welcome to the application to manage your contacts')
+	c=''
+	helpMessage="Press 's' tho show the list of contacts\nPress 'n' to add a contact\nPress 'u' to update a contact\nPress 'f' to find a contact\nPress 'd' to delete a contact\nPress 'q'to save end exit"
+	while True:
+		print(helpMessage)
+		command=input()
+		if command=='s':
+			book.show()
+		elif command=='n':
+			name=input('Write the name of the contact : ')
+			surname=input('Write the surname of the contact : ')
+			mail=input('Write the mail of the contact : ')
+			book.add_contact(name,surname,mail)
+			print('Contact Added')
+		elif command=='u':
+			name=input('Write the name of the contact : ')
+			surname=input('Write the surname of the contact : ')
+			book.update_contact(name,surname)
+		elif command=='f':
+			surname=input('Write the surname of the contact : ')
+			book.find(surname)
+		elif command=='d':
+			name=input('Write the name of the contact you want to delete : ')
+			book.remove_contact(name)
+		elif command=='q':
+			book.save()
+			break
+		else:
+			print('Command not available')
+
+
+import json
+class Contact():
+	def __init__(self,name,surname,mail):
+		self.name=name
+		self.surname=surname
+		self.mail=mail
+	def __repr__(self):
+		return "Name:{}, Surname:{}, mail:{}".format(self.name,self.surname,self.mail)
+	def jsonify(self):
+		contact={'name':self.name,'surname':self.surname,'mail':self.mail}
+		return contact
+
+class AddressBook():
+	def __init__(self):
+		file_content=json.load(open('contacts.json'))
+		self.contacts=[]
+		for contact in file_content.get('contacts'):
+			self.contacts.append(Contact(contact.get('name'),contact.get('surname'),contact.get('email')))
+	
+	def show(self):
+		for contact in self.contacts:
+			print(contact)
+	
+	def find_by_name(self,name):
+		results=[contact for contact in self.contacts if contact.name==name]
+		print("I found the following results:\n")
+		for x in results:
+			print(x)
+	def find_by_surname(self,surname):
+		results=[contact for contact in self.contacts if contact.surname==surname]
+		print("I found the following results:\n")
+		for x in results:
+			print(x)
+	def add_contact(self,name,surname,mail):
+		"""
+		new_contact(name,surname,mail):
+		"""
+		self.contacts.append(Contact(name,surname,mail))
+		
+	def remove_contact(self,name):
+		"""remove_contact(name)"""
+		contact=[contact for contact in self.contacts if contact.name==name]
+		self.contacts.pop(self.contacts.index(contact[0]))
+	def save(self):
+		"""save()"""
+		fp=open('contacts.json','w')
+		content={'contacts':[]}
+		for c in self.contacts:
+			content['contacts'].append(c.jsonify())
+		json.dump(content,fp)
+		fp.close()
+
+if __name__=="__main__":
+	book=AddressBook()
+	print('Welcome to the application to manage your contacts')
+	c=''
+	helpMessage="Press 's' tho show the list of contacts\nPress 'n' to add a contact\nPress 'f' to find a contact\nPress 'd' to delete a contact\nPress 'q'to save end exit"
+	while True:
+		print(helpMessage)
+		command=input()
+		if command=='s':
+			book.show()
+		elif command=='n':
+			name=input('Write the name of the contact : ')
+			surname=input('Write the surname of the contact : ')
+			mail=input('Write the mail of the contact : ')
+			book.add_contact(name,surname,mail)
+			print('Contact Added')
+		elif command=='d':
+			name=input('Write the name of the contact you want to delete : ')
+			book.remove_contact('name')
+		elif command=='q':
+			book.save()
+			break
+		else:
+			print('Command not available')
+
+
+def get_players(file_content):
+	return file_content['players']
+
+def average_heigth(file_content):
+	players=get_players(file_content)
+	heigths=[p['hgt']/39.37 for p in players]
+	return sum(heigths)/len(heigths)
+
+def average_weigth(file_content):
+	players=get_players(file_content)
+	weigths=[p['weight']/2.205 for p in players]
+	return sum(weigths)/len(weigths)
+
+def average_ratings(file_content):
+	players=get_players(file_content)
+	num_players=len(players)
+	avg_ratings=dict.fromkeys(players[0]['ratings'][0],0)
+	for player in players:
+		player_ratings=player['ratings'][0]
+		for key in player_ratings.keys():
+			avg_ratings[key]+=player_ratings[key]/num_players
+	return avg_ratings
+			
+def average_age(file_content):
+	players=get_players(file_content)
+	ages=[2020-p['born']['year'] for p in players]
+	return sum(ages)/len(ages)
+
+
+import math
+class Circle(object):
+	"""Create a circle knowing his radius"""
+	def __init__(self, radius):
+		self.radius=radius
+	def perimeter(self):
+		"""Returns the perimeter of the circle"""
+		return (2*math.pi*self.radius)
+	def area(self):
+		"""Returns the area of the circle"""
+		return (math.pi*self.radius**2)
+
+class Cylinder(Circle):
+	""""Create a cylinder knowing his radius and his height"""
+	def __init__(self, radius,height):
+		Circle.__init__(self,radius)
+		self.height=height
+	def area(self):
+		"""Returns the area of the cylinder"""
+		return (self.perimeter()*self.height+2*Circle(self.radius).area())
+	def volume(self):
+		"""Returns the volume of the cylinder"""
+		return (Circle(self.radius).area()*self.height)
+
+if __name__ == '__main__':
+	a=Circle(3)
+	print(a.perimeter())
+	print(a.area())
+	b=Cylinder(3,8)
+	print(b.area())
+	print(b.volume())
+
+
+
+
+
+class Block(object):
+	"""docstring for Block"""
+	def __init__(self,name,toolToUse,breakable):
+		self.name=name
+		self.toolToUse=toolToUse
+		self.breakable=breakable
+	def __repr__(self):
+		return self.name
+	def isBreakable(self):
+		return self.breakable
+	def breakWith(self,tool):
+		if self.isBreakable():
+			if tool in self.toolToUse:
+				pass
+			else:
+				pass
+		else:
+			print("You can't break it!")
+			pass
+class Cobblestone(Block):
+	def __init__(self,name,toolToUse,breakable):
+		Block.__init__(self,name,toolToUse,breakable)
+		self.drop=self
+	def breakWith(self,tool):
+		if self.isBreakable():
+			if tool in self.toolToUse:
+				return self.drop
+			else:
+				return None
+		else:
+			print("You can't break it!")
+			return None
+
+
+class Stone(Block):
+	def __init__(self,name,toolToUse,breakable):
+		Cobblestone.__init__(self,name,toolToUse,breakable)
+		self.drop=Cobblestone("cobblestone","pickaxe",True)
+	def breakWith(self,tool):
+		if self.isBreakable():
+			if tool in self.toolToUse:
+				return self.drop
+			else:
+				return None
+		else:
+			print("You can't break it!")
+			return None
+
+
+class Chest(Block):
+	"""docstring for Chest"""
+	def __init__(self,name,toolToUse,breakable):
+		Block.__init__(self,name,toolToUse,breakable)
+		self.content=[]
+
+	def breakWith(self,tool):
+		if self.isBreakable():
+			if tool in self.toolToUse:
+				drop=[item for item in self.content]
+				self.content=[]
+				drop.append(self)
+				return drop
+			else:
+				return None
+		else:
+			print("You can't break it!")
+			return None
+	def insertItem(self,item):
+		self.content.append(item)
+
+
+if __name__ == '__main__':
+	cobblestone=Cobblestone("cobblestone","pickaxe",True)
+	stone=Stone("stone","pickaxe",True)
+	chest=Chest("myChest",["pickaxe","axe","hand"],True)
+	cb=cobblestone.breakWith("pickaxe")
+	print(cb)
+	st=stone.breakWith("pickaxe")
+	print(st)
+	for i in range(4):
+		chest.insertItem(cb)
+	ct=chest.breakWith("")
+	print(ct)
+
+
+class Car(object):
+	"""docstring for Car"""
+	def __init__(self, name, speed):
+		self.__name=name
+		self.__speed=__limitSpeed(speed)
+		self.__gear=1
+
+	def __limitSpeed(self,speed):
+		if speed < 250:
+			return speed
+		else:
+			return 250
+			
+	def getName(self):
+		return self.__name
+
+	def getSpeed(self):
+		return self.__speed
+	
+	def setSpeed(self, speed):
+		self.__speed=__limitSpeed(speed)
+
+	def gearUp(self):
+		if self.__gear<6:
+			self.__gear+=1
+
+	def gearDown(self):
+		if self.__gear > 1:
+			self.ger-=1
+
+	def getGear(self):
+		return self.__gear
+		
+		
+		
+
+
